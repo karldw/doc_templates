@@ -1,0 +1,41 @@
+% Define a "Certified Random" citation option for biblatex
+% Usage:
+% Add this field to your bib entry:
+% author+an = {=certrand},
+% Then cite as normal!
+
+
+
+
+% Code here: https://tex.stackexchange.com/a/489891
+
+\newcommand*{\ifcertrand}{\iffieldannotation{certrand}}
+
+\newcommand*{\certrandorelse}[1]{%
+  \ifcertrand
+    {\addspace\textcircled{r}\space}
+    {#1}}
+
+\DeclareDelimFormat{multinamedelim}{\certrandorelse{\addcomma\space}}
+\DeclareDelimFormat{finalnamedelim}{%
+  \certrandorelse{%
+    \ifnumgreater{\value{liststop}}{2}{\finalandcomma}{}%
+    \addspace\bibstring{and}\space}}
+
+\NewBibliographyString{certrandothers}
+\DefineBibliographyStrings{american}{%
+  certrandothers = {\textcircled{r} al\adddot},
+}
+\renewbibmacro*{name:andothers}{%
+  \ifboolexpr{
+    test {\ifnumequal{\value{listcount}}{\value{liststop}}}
+    and
+    test \ifmorenames
+  }
+    {\ifcertrand
+       {\printdelim{andothersdelim}\bibstring{certrandothers}}
+       {\ifnumgreater{\value{liststop}}{1}
+          {\finalandcomma}
+          {}%
+        \printdelim{andothersdelim}\bibstring{andothers}}}
+    {}}

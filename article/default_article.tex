@@ -1,0 +1,256 @@
+% !TeX encoding = utf8
+% !TeX spellcheck = en_US
+% !BIB program = biber
+% !TeX program = lualatex
+
+\documentclass[12pt,oneside,letterpaper]{article}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\usepackage{amsmath}  % must be loaded before unicode-math
+% Libertinus code suggested by https://tex.stackexchange.com/a/364502
+\usepackage[
+    math-style=ISO,
+    bold-style=ISO,
+    partial=upright,
+    nabla=upright
+]{unicode-math}
+\setmainfont[Numbers={OldStyle, Proportional}]{Libertinus Serif}
+\setsansfont[Numbers={OldStyle, Proportional}]{Libertinus Sans}
+\setmathfont{Libertinus Math}
+\setmonofont{Inconsolata}
+
+\usepackage{polyglossia}
+\setmainlanguage[variant=american]{english}
+\usepackage{csquotes}
+\usepackage[final]{microtype}
+\frenchspacing{}
+\microtypecontext{spacing=french}
+
+% Don't do ligatures in compound words:
+\usepackage[english]{selnolig}
+
+% \usepackage{realscripts}
+\usepackage[newcommands]{ragged2e}  % allow for ragged-right with hyphenation
+
+
+% Format sections:
+% \titleformat{command}[shape]{format}{label}{sep}{before-code}[after-code]
+\usepackage[it, small]{titlesec}
+\titlelabel{}  % remove numbers
+
+% Format itemized lists
+\usepackage{enumitem}
+\setlist{noitemsep}
+
+
+% Write out acronyms in small caps that can be copy-pasted as full caps.
+% It would be nice to have something that depended less on defining each acronym, or less on the c2sc OpenType font feature
+% Usage: \makeacronym{NASA}
+\newfontfamily\acronymfont{Libertinus Serif}[Letters=UppercaseSmallCaps]
+\usepackage{accsupp}
+\newcommand{\makeacronym}[1]{%
+    \BeginAccSupp{method=plain,ActualText=#1}%
+    {\acronymfont #1}%
+    \EndAccSupp{}}
+
+
+% Allow for multicolumn document
+\usepackage{multicol}
+\setlength{\columnsep}{1.3em}
+
+
+% You can add attachments!
+% \usepackage{embedfile}
+% \embedfile{application_notes.tex}
+
+% Set a better default text area (note: don't use this and geometry at the same time.)
+\usepackage[DIV=12]{typearea}
+% Tinker with page or line spacing if you want.
+\setlength{\textheight}{1.05\textheight}
+% \setlength{\parskip}{\baselineskip}
+% \setlength{\parindent}{0em}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+% \fancypagestyle{firstpagestyle}{
+%     \lhead{}
+%     \rhead{}
+%     \chead{}
+%     \renewcommand{\headrulewidth}{0.5pt}
+%     \setlength{\headheight}{12pt}
+% }
+\usepackage{xcolor}
+
+% Redefine \left and \right with better spacing
+\usepackage{mleftright}
+\mleftright{}
+
+% Define \expected and \indicator commands
+\DeclareMathOperator{\blackboardE}{\mathbb{E}}
+\newcommand{\expected}[2][]{%
+% If no optional argument, no subscript:
+\ifthenelse{\isempty{#1}}{
+\blackboardE\left[#2\right]
+}{
+% If optional argument is provided, use it as the subscript
+\blackboardE_{#1}\left[#2\right]
+}}
+\newcommand{\indicator}[1]{\symbf{1}\left[#1\right]}
+
+% Use embrac to make parentheses and brackets never italic.
+% This change breaks the spacing after closing paren, so also define a \postparen command to add more space.
+\usepackage[biblatex]{embrac}
+\newlength{\postparenlength}
+\setlength{\postparenlength}{0.14em}
+\newcommand{\postparen}{\hspace{\postparenlength}}
+
+\usepackage{xcolor}
+
+
+% Set up tables
+\usepackage{threeparttable}
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{4}}
+% \usepackage{siunitx}
+% \sisetup{
+  % group-separator={,},
+  % group-digits = integer,
+  % input-ignore = {,},
+  % input-decimal-markers = {.},
+  % round-mode = figures,
+  % round-precision = 6,% this number should be large because the default is to round to 2 figures in \SI{} numbers.
+  % table-format = 5.2,
+  % detect-all, % match text font
+  % per-mode = symbol % don't use negative powers for units
+% }
+% TODO: check std err formatting
+\usepackage{etoolbox}
+\newfontfamily\tablefont{Libertinus Serif}[Numbers={Monospaced,Lining}]
+\AtBeginEnvironment{tabular}{%
+   % \addfontfeature{Numbers={Monospaced, Uppercase}}%
+   % \sisetup{text-rm=\tablefont}%
+   \tablefont
+}
+
+\usepackage{booktabs}
+
+% Bibliograph
+\usepackage[authordate,isbn=false,backend=biber,autopunct=true]{biblatex-chicago}
+\usepackage{biblatex-certrand} % in the same folder
+\renewcommand*{\bibfont}{\small}
+\addbibresource{refs.bib}
+
+% use the \ce{} command for chemistry expressions like \ce{CO2}
+\usepackage[version=4]{mhchem}
+
+% Better margin notes
+\usepackage{marginnote}
+\renewcommand*{\marginfont}{\footnotesize}
+
+\usepackage{nameref}
+
+\usepackage{graphicx}
+% \graphicspath{{./graphics/}}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks,
+  linkcolor=blue!40!black,
+  filecolor=black,
+  urlcolor=blue!40!black,  % 40% blue, 60% black
+  citecolor=black,
+  pdfpagemode=UseNone,
+  pdftoolbar=false,
+  pdftitle={},
+  pdfauthor={},
+  pdfsubject={},
+  pdfcreator={},
+  pdfproducer={},
+  pdflang=en,
+  unicode=true
+}
+\widowpenalty 9999
+% \clubpenalty 9996
+
+\usepackage{lipsum}
+\begin{document}
+%
+\begin{center}
+    {\large Title here}
+
+    Author here
+
+    \today
+\end{center}
+
+\vspace{\baselineskip}
+
+% I strongly recommend multicolumn documents.
+% Filling the page with a single line is way too much text,
+% and having a reasonable line width on a 8.5x11" page leaves huge margins
+\begin{multicols*}{2}
+
+
+\section{Some Citations}
+
+
+Certified random:  \textcite{Ray/Robson:2018}
+
+\texttt{Mono font demo}
+
+\textsf{San-serif font demo}
+
+\section{Nonsense words}
+
+\lipsum[1-2]
+
+
+\begin{center}
+\begin{threeparttable}
+\caption{Table caption}
+\begin{tabular}{dd}
+\toprule
+\multicolumn{1}{c}{A} & \multicolumn{1}{c}{B} \\
+\midrule
+% Note that auto-generated tables can make text bold or insert a \tnote as well.
+12345 & \textbf{12345} \\
+(1.3) & (4.5) \\
+11111 & 11111\tnote{a} \\
+0.001 & 2\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \textsc{Source:} Author's calculations.
+\item [a] What a great number!
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+
+
+\end{multicols*}
+
+\pagebreak
+\appendix
+
+% Print the bibliography ragged right.
+
+% turn off microtype character expansion, turn on ragged right and make it less ragged
+% see: https://tex.stackexchange.com/questions/134303/does-combining-microtype-with-ragged-right-make-any-sense
+\RaggedRight{}
+\setlength\RaggedRightRightskip{0pt} % default is: 0pt plus 2em
+\microtypesetup{expansion=false}
+
+\begin{multicols*}{2}
+\printbibliography{}
+\end{multicols*}
+
+
+\end{document}

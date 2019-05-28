@@ -1,0 +1,371 @@
+% !TeX encoding = utf8
+% !TeX spellcheck = en_US
+% !BIB program = biber
+% !TeX program = lualatex
+
+
+\documentclass[aspectratio=169,12pt,usepdftitle=false]{beamer}
+
+% Configure beamer
+\usetheme{Dresden}
+\usecolortheme{dove}
+\usefonttheme[stillsansserifsmall]{serif}
+\setbeamerfont{title}{size=\Huge,family=\titlefont}
+\setbeamerfont{author}{parent={title},size=\Large,family=\rmfamily}
+\setbeamerfont{date}{parent={author}}
+\setbeamerfont{frametitle}{size=\Large}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin right=0.13\paperwidth,%
+    text margin right=0.13\paperwidth}
+\setbeamertemplate{frametitle continuation}{}  % no indication that this is the second frame in an allowframebreaks group
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{subtitle}{size=\Large}
+\setbeamerfont{author}{size=\large}
+% Make the background, including the section header, lightgray
+% NOTE: If you use a different theme, you might have to tweak this a bit
+\definecolor{lightgray}{RGB}{245,245,245}
+\setbeamercolor{background canvas}{bg=lightgray}
+\setbeamercolor{section in head/foot}{bg=lightgray}
+\setbeamercolor{subsection in head/foot}{bg=lightgray}
+
+\setbeamercolor{alerted text}{fg=red!70!black}
+
+% Configure fonts and languages
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\defaultfontfeatures{Ligatures=TeX}
+% These fonts are not installed by default.
+% Download them and install them in your $HOME/.fonts/ folder
+% https://github.com/libertinus-fonts/libertinus
+% http://overpassfont.org/
+% FontAwesome might not be installed by default on Mac, but is available online for free.
+\setmainfont{Libertinus Serif}
+\setmathfont{Libertinus Math}
+\setsansfont{Overpass}
+\setmonofont{Overpass Mono}
+\newfontfamily\titlefont{Libertinus Serif Display}
+\usepackage{fontawesome}
+\usepackage{amsmath}
+\usepackage{polyglossia}
+\setmainlanguage[variant=american]{english}
+\usepackage{csquotes}
+\usepackage{microtype}
+\microtypecontext{spacing=nonfrench}
+
+% Add a page with the section title at the beginning of each section.
+% (The less-custom way to do this would be \AtBeginSection{\frame{\sectionpage}})
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsection\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+  % After putting in this section, increment the subsection counter.
+  % I'm not using subsections, but the beamer theme looks at the subsection counter to see whether it should put dots representing the number of slides used.
+  % If you are using subsections and have trouble trouble with subsection numbering, comment this line out.
+  \stepcounter{subsection}
+}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{xifthen}  % provide \isempty
+\makeatletter
+\newcommand{\customframenumber}{%
+\ifnumequal{\c@framenumber}{0}{}{% Only do the following for slides that aren't #0
+% Line up the numbers with the progress dots
+\begin{textblock*}{2ex}[1,1](0.989\paperwidth,0.98\paperheight)%
+\raggedleft%
+\insertframenumber%
+\end{textblock*}%
+}%
+}
+\makeatother
+\setbeamertemplate{footline}{\customframenumber}
+
+
+% Define a fullscreenback command, to be called like:
+% \fullscreenback{my-label}{back-button-label}{image-filename}
+% All arguments are required, but may be empty.
+\newcommand{\fullscreenback}[3]{%
+{%
+\usebackgroundtemplate{%
+% parbox borrowed from https://tex.stackexchange.com/a/26459
+\parbox[c][\paperheight][c]{\paperwidth}{%
+\centering\includegraphics[height=\paperheight, width=\paperwidth, keepaspectratio]{#3}
+}%
+}%
+\begin{frame}[plain]
+% Optional arguments borrowed from https://tex.stackexchange.com/a/58629
+\ifthenelse{\isempty{#1}}{}{\label{#1}}
+\ifthenelse{\isempty{#2}}{}{\backbutton{#2}}
+\usebeamerfont{footline}{\customframenumber}
+\end{frame}
+}%
+}
+\newcommand{\fullscreen}[2][]{%
+% Call the fullscreenback command with no back argument, so no back button
+% Label is optional first argument
+\fullscreenback{#1}{}{#2}
+}
+
+\newcommand{\fullscreencredit}[3][bottom right]{%
+% Like \fullscreen, but with a photo credit
+{%
+\usebackgroundtemplate{%
+% parbox borrowed from https://tex.stackexchange.com/a/26459
+\parbox[c][\paperheight][c]{\paperwidth}{%
+\centering\includegraphics[height=\paperheight, width=\paperwidth, keepaspectratio]{#2}
+}%
+}%
+\begin{frame}[plain]
+% Pick alignment. Only bottom right, top right, and bottom left are implemented so far.
+\ifthenelse{\equal{#1}{bottom right}}{%
+  % If optional is "bottom right", the default
+  \begin{textblock*}{\widthof{\usebeamerfont{footline}{#3}}}[1,0](0.98\paperwidth, 0.96\paperheight)
+  \hfill \usebeamerfont{footline}{#3}%
+}{%
+\ifthenelse{\equal{#1}{top right}}{% if optional is not "bottom right", check if it's "top right"
+  % If optional is "top right"
+  \begin{textblock*}{\widthof{\usebeamerfont{footline}{#3}}}[1,0](0.98\paperwidth, 0.03\paperheight)
+  \hfill \usebeamerfont{footline}{#3}%
+}{%
+\ifthenelse{\equal{#1}{bottom left}}{%
+  % If optional is "bottom left"
+  \begin{textblock*}{\widthof{\usebeamerfont{footline}{#3}}}[0,0](0.02\paperwidth, 0.96\paperheight)
+  \raggedright \usebeamerfont{footline}{#3}%
+}{%  if optional is not "bottom right", "top right", or "bottom left"
+  \begin{textblock*}{\textwidth}[1,0](0.98\paperwidth, 0.03\paperheight)
+  \large WARNING: alignment #1 is not implemented.
+}}}
+% Remaining lines are outside the if-else because we run it in any case
+\usebeamerfont{footline}{\customframenumber}
+\end{textblock*}
+\end{frame}
+}%
+}
+
+% Use the textpos package to make it easy to put the beamer "back" button in the bottom right
+% the new command is called \backbutton. It takes one argument, the label you're linking back to.
+\newcommand{\backbutton}[1]{%
+% these text positions are measured from the upper left corner, so 0.9, 0.9 is lower right
+\begin{textblock*}{2cm}(0.93\paperwidth,0.92\paperheight)%
+    \hyperlink{#1}{\beamerbutton{Back}}
+\end{textblock*}%
+}
+\setbeamercolor{button}{bg=white, fg=black}
+\setbeamercolor{button border}{fg = black!60!gray}
+\setbeamerfont{button}{family=\sffamily}
+
+% Improve math spacing around \left and \right
+\usepackage{mleftright}
+\mleftright{}
+\DeclareMathOperator{\blackboardE}{\mathbb{E}}
+
+% Define \expected and \indicator commands
+\newcommand{\expected}[2][]{%
+% If no optional argument, no subscript:
+\ifthenelse{\isempty{#1}}{
+\blackboardE\left[#2\right]
+}{
+% If optional argument is provided, use it as the subscript
+\blackboardE_{#1}\left[#2\right]
+}}
+\newcommand{\indicator}[1]{\symbf{1}\left[#1\right]}
+
+
+\usepackage[biblatex]{embrac}
+% Define a postparen command to fix spacing after ")", "]", or "}" because of embrac.
+\newlength{\postparenlength}
+\setlength{\postparenlength}{0.14em}
+\newcommand{\postparen}{\hspace{\postparenlength}}
+
+\usepackage[version=4]{mhchem}  % use the \ce{} command for chemistry expressions
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+% If you want to use siunitx, here are some setting suggestions:
+% \usepackage{siunitx}
+% \sisetup{
+%   group-separator={,},
+%   group-digits = integer,
+%   input-ignore = {,},
+%   input-symbols = {()},  % make siunitx not flip out about () for standard errors
+%   input-open-uncertainty  = ,
+%   input-close-uncertainty  = ,
+%   input-decimal-markers = {.},
+%   table-space-text-post = ***,
+%   table-align-text-post = false,
+%   round-mode = figures,
+%   round-precision = 2
+% }
+\usepackage[authordate,isbn=false,backend=biber,autopunct=true]{biblatex-chicago}
+\usepackage{biblatex-certrand} % provided in the same folder -- biblatex-certrand.sty
+\renewcommand*{\bibfont}{\small}
+
+% Use mdframed to make a semi-transparent title box
+% Borrowed from http://danielfalster.com/blog/2013/06/18/a-nice-title-page-for-beamer-presentations/
+\usepackage[framemethod=tikz]{mdframed}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks,
+  linkcolor=black,
+  filecolor=black,
+  urlcolor=blue!40!black,  % 40% blue, 60% black
+  citecolor=black,
+  pdfpagemode=UseNone,
+  pdftoolbar=false,
+  pdftitle={a},
+  pdfauthor={},
+  pdfsubject={},
+  pdfcreator={},
+  pdfproducer={},
+  pdflang=en,
+  unicode=true
+}
+
+\usepackage{dcolumn}
+
+% Define two column types, d, a basic numeric column, and A, the same for alerted text.
+% Changes are in sync with the 'alerted text' beamer color.
+\newcolumntype{d}[0]{D{.}{.}{4}}
+\makeatletter
+% Borrowed from https://tex.stackexchange.com/a/152313
+\newcolumntype{A}[0]{>{\begin{alertenv}\DC@{.}{.}{4}}c<{\DC@end\end{alertenv}}}
+\makeatother
+\newcommand{\alertcol}[1]{\multicolumn{1}{A}{#1}}
+
+% Things to customize:
+\addbibresource{refs.bib}
+\graphicspath{{./graphics/}}
+% If you only want to print your \note{}s
+% \setbeameroption{show only notes}
+\title{Punny title: evidence from Punnsylvania}
+\subtitle{}
+\author[]{Author}
+\institute{}
+\date{January 19, 2038}
+
+\begin{document}
+{
+\usebackgroundtemplate{%
+% parbox borrowed from https://tex.stackexchange.com/a/26459
+\parbox[c][\paperheight][c]{\paperwidth}{%
+\centering
+\includegraphics[height=\paperheight, width=\paperwidth, keepaspectratio]{sample_image}
+% Sample photo by Peter Oslanec on Unsplash
+}}
+\begin{frame}[plain]
+\begin{mdframed}[tikzsetting={draw=black, fill=white, fill opacity=0.7, line width=4pt},
+    backgroundcolor=none,
+    leftmargin=0, rightmargin=0, skipabove=0.3\paperwidth, skipbelow=0.05\paperwidth,
+    innertopmargin=1em, innerbottommargin=1em]
+
+    {\usebeamerfont{title}{\inserttitle}}
+
+\begin{columns}[T] % align columns
+\begin{column}{.55\textwidth}
+    \vspace{\baselineskip}
+
+    {\usebeamerfont{author}{\insertauthor}}
+
+    {\usebeamerfont{institute}{\insertinstitute}}
+
+    {\usebeamerfont{date}{\insertdate}}
+
+\end{column}
+\begin{column}{.45\textwidth}
+
+    \faicon{paper-plane} \href{mailto:email@example.com}{email@example.com}
+
+    \faicon{laptop} \href{https://example.org}{https://example.org}
+
+    \faicon{map-signs} Some place
+\end{column}%
+\end{columns}
+\end{mdframed}
+\end{frame}
+}
+
+\section{section1}
+
+\begin{frame}{Isn't this a great deck?}
+
+\end{frame}
+
+\appendix
+\section{References}
+
+\begin{frame}[t,allowframebreaks] % References
+  \frametitle{References}
+  \printbibliography
+\end{frame}
+\end{document}
+
+%%%%%%%%%%%%%%%%
+% Useful template material:
+\begin{frame}{}
+  \begin{itemize}
+    \item
+    \item
+    \item
+  \end{itemize}
+\end{frame}
+
+
+% A fullscreen figure:
+\fullscreen{my_fav_photo}
+% A fullscreen figure with \label:
+\fullscreen[fig:my-fav]{my_fav_photo}
+
+
+% Table:
+\makebox[\linewidth][c]{
+\begin{tabular}{l S S S}
+A & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{C} &  \multicolumn{1}{c}{D}
+\end{tabular}
+}
+
+
+% Fancy table:
+\begin{frame}{Results!}
+\makebox[\linewidth][c]{
+\begin{tabular}{l dddd}
+  \toprule
+ &  \multicolumn{1}{c}{Means} & \multicolumn{3}{c}{Diff-in-Diff Estimates} \\
+  Outcome 1 & 2.58 & 0.11 & 0.08 & 0.12\\
+            & (2.55) & (0.04) & (0.04) & (0.04)\\
+ Outcome 2 & 60.90 & -0.73^{**} & -0.113^{***} & -1.58\\
+            & (17.02) & (0.10) & (0.11) & (0.12) \\
+  Outcome 3 & \alertcol{18.98} & 0.77 &1.28 & 1.62 \\
+            & \alertcol{(6.74)} & (0.13) & (0.13) & (0.12)\\
+  \bottomrule
+  \addlinespace
+  % NOTE: Adjust this multicolumn number to be the number of columns you have, and adjust the fraction of \linewidth to make the column spacing look good.
+  \multicolumn{5}{p{0.7\linewidth}}{
+  \small
+  \textsc{Note:}
+  The standard errors are clustered by exactly the right variables.
+  \par
+  ** and *** indicate significance at the 5\% and 1\% levels.
+  }
+\end{tabular}
+}
+\end{frame}
+
+
+% Two-column frame
+\begin{frame}{Two Column Frame}
+    \begin{columns}[T] % align columns
+        \begin{column}{.58\textwidth}
+        \color{red}\rule{\linewidth}{4pt}
+        Column 1
+        \end{column}%
+    \hfill%
+        \begin{column}{.38\textwidth}
+        \color{blue}\rule{\linewidth}{4pt}
+        Column 2
+        \end{column}%
+    \end{columns}
+\end{frame}
