@@ -10,8 +10,9 @@
 \usetheme{Dresden}
 \usecolortheme{dove}
 \usefonttheme[stillsansserifsmall]{serif}
-\setbeamerfont{title}{size=\Huge,family=\titlefont}
-\setbeamerfont{author}{parent={title},size=\Large,family=\rmfamily}
+\setbeamerfont{title}{size=\LARGE,family=\titlefont}
+\setbeamerfont{subtitle}{parent={title},size=\Large}
+\setbeamerfont{author}{parent={title},size=\Large}
 \setbeamerfont{date}{parent={author}}
 \setbeamerfont{frametitle}{size=\Large}
 \usefonttheme{professionalfonts}
@@ -19,9 +20,6 @@
 \setbeamersize{text margin right=0.13\paperwidth,%
     text margin right=0.13\paperwidth}
 \setbeamertemplate{frametitle continuation}{}  % no indication that this is the second frame in an allowframebreaks group
-\setbeamerfont{title}{size=\LARGE}
-\setbeamerfont{subtitle}{size=\Large}
-\setbeamerfont{author}{size=\large}
 % Make the background, including the section header, lightgray
 % NOTE: If you use a different theme, you might have to tweak this a bit
 \definecolor{lightgray}{RGB}{245,245,245}
@@ -40,17 +38,18 @@
 % https://github.com/libertinus-fonts/libertinus
 % http://overpassfont.org/
 % FontAwesome might not be installed by default on Mac, but is available online for free.
-\setmainfont{Libertinus Serif}
+\setmainfont[Numbers={OldStyle, Proportional}]{Libertinus Serif}
 \setmathfont{Libertinus Math}
 \setsansfont{Overpass}
 \setmonofont{Overpass Mono}
-\newfontfamily\titlefont{Libertinus Serif Display}
+\newfontfamily\titlefont{Libertinus Serif Display}[Numbers={OldStyle, Proportional}]
 \usepackage{fontawesome}
 \usepackage{amsmath}
 \usepackage{polyglossia}
 \setmainlanguage[variant=american]{english}
 \usepackage{csquotes}
 \usepackage{microtype}
+\frenchspacing
 \microtypecontext{spacing=nonfrench}
 
 % Add a page with the section title at the beginning of each section.
@@ -69,6 +68,7 @@
   % If you are using subsections and have trouble trouble with subsection numbering, comment this line out.
   \stepcounter{subsection}
 }
+\usepackage{changepage}
 \usepackage[absolute,overlay]{textpos}
 \usepackage{xifthen}  % provide \isempty
 \makeatletter
@@ -146,12 +146,16 @@
 }%
 }
 
+\newcommand{\navbutton}[2]{%
+\hyperlink{#1}{\beamerbutton{#2}}%
+}
+
 % Use the textpos package to make it easy to put the beamer "back" button in the bottom right
 % the new command is called \backbutton. It takes one argument, the label you're linking back to.
 \newcommand{\backbutton}[1]{%
 % these text positions are measured from the upper left corner, so 0.9, 0.9 is lower right
 \begin{textblock*}{2cm}(0.93\paperwidth,0.92\paperheight)%
-    \hyperlink{#1}{\beamerbutton{Back}}
+\navbutton{#1}{Back}
 \end{textblock*}%
 }
 \setbeamercolor{button}{bg=white, fg=black}
@@ -161,8 +165,8 @@
 % Improve math spacing around \left and \right
 \usepackage{mleftright}
 \mleftright{}
-\DeclareMathOperator{\blackboardE}{\mathbb{E}}
 
+\DeclareMathOperator{\blackboardE}{\mathbb{E}}
 % Define \expected and \indicator commands
 \newcommand{\expected}[2][]{%
 % If no optional argument, no subscript:
@@ -185,6 +189,8 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{sparklines}
+
 % If you want to use siunitx, here are some setting suggestions:
 % \usepackage{siunitx}
 % \sisetup{
@@ -198,7 +204,9 @@
 %   table-space-text-post = ***,
 %   table-align-text-post = false,
 %   round-mode = figures,
-%   round-precision = 2
+%   round-precision = 2,
+% tight-spacing = true,
+% table-alignment = right
 % }
 \usepackage[authordate,isbn=false,backend=biber,autopunct=true]{biblatex-chicago}
 \usepackage{biblatex-certrand} % provided in the same folder -- biblatex-certrand.sty
@@ -238,7 +246,7 @@
 
 % Things to customize:
 \addbibresource{refs.bib}
-\graphicspath{{./graphics/}}
+\graphicspath{{../graphics/}}
 % If you only want to print your \note{}s
 % \setbeameroption{show only notes}
 \title{Punny title: evidence from Punnsylvania}
@@ -288,7 +296,7 @@
 \end{frame}
 }
 
-\section{section1}
+\section{Section 1}
 
 \begin{frame}{Isn't this a great deck?}
 
