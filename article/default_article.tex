@@ -4,10 +4,20 @@
 % !TeX program = lualatex
 
 \documentclass[12pt,oneside,letterpaper]{article}
+\nonstopmode % never stop to ask to fix things.
 
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
 \usepackage{amsmath}  % must be loaded before unicode-math
+
+% Set a better default text area (note: don't use this and geometry at the same time.)
+% typearea must be loaded before unicode-math
+\usepackage[DIV=12]{typearea}
+% Tinker with page or line spacing if you want.
+\setlength{\textheight}{1.05\textheight}
+% \setlength{\parskip}{\baselineskip}
+% \setlength{\parindent}{0em}
+
 % Libertinus code suggested by https://tex.stackexchange.com/a/364502
 \usepackage[
     math-style=ISO,
@@ -19,6 +29,7 @@
 \setsansfont[Numbers={OldStyle, Proportional}]{Libertinus Sans}
 \setmathfont{Libertinus Math}
 \setmonofont{Inconsolata}
+
 
 \usepackage{polyglossia}
 \setmainlanguage[variant=american]{english}
@@ -63,13 +74,6 @@
 % You can add attachments!
 % \usepackage{embedfile}
 % \embedfile{application_notes.tex}
-
-% Set a better default text area (note: don't use this and geometry at the same time.)
-\usepackage[DIV=12]{typearea}
-% Tinker with page or line spacing if you want.
-\setlength{\textheight}{1.05\textheight}
-% \setlength{\parskip}{\baselineskip}
-% \setlength{\parindent}{0em}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
