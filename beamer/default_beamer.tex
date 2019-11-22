@@ -4,7 +4,8 @@
 % !TeX program = lualatex
 
 
-\documentclass[aspectratio=169,12pt,usepdftitle=false]{beamer}
+\documentclass[aspectratio=169,14pt,usepdftitle=false]{beamer}
+\nonstopmode % never stop to ask to fix things.
 
 % Configure beamer
 \usetheme{Dresden}
@@ -249,7 +250,7 @@
 \graphicspath{{../graphics/}}
 % If you only want to print your \note{}s
 % \setbeameroption{show only notes}
-\title{Punny title: evidence from Punnsylvania}
+\title{Punny title: evidence from\\Punnsylvania}
 \subtitle{}
 \author[]{Author}
 \institute{}
@@ -267,13 +268,17 @@
 \begin{frame}[plain]
 \begin{mdframed}[tikzsetting={draw=black, fill=white, fill opacity=0.7, line width=4pt},
     backgroundcolor=none,
-    leftmargin=0, rightmargin=0, skipabove=0.3\paperwidth, skipbelow=0.05\paperwidth,
-    innertopmargin=1em, innerbottommargin=1em]
+    leftmargin=0.1\paperwidth,
+    rightmargin=-0.1\paperwidth,
+    skipabove=0.15\paperwidth,
+    skipbelow=0.05\paperwidth,
+    innertopmargin=1em,
+    innerbottommargin=1em]
 
     {\usebeamerfont{title}{\inserttitle}}
 
 \begin{columns}[T] % align columns
-\begin{column}{.55\textwidth}
+\begin{column}{.45\textwidth}
     \vspace{\baselineskip}
 
     {\usebeamerfont{author}{\insertauthor}}
@@ -283,7 +288,7 @@
     {\usebeamerfont{date}{\insertdate}}
 
 \end{column}
-\begin{column}{.45\textwidth}
+\begin{column}{.55\textwidth}
 
     \faicon{paper-plane} \href{mailto:email@example.com}{email@example.com}
 
